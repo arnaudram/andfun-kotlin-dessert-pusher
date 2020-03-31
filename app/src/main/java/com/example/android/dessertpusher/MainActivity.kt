@@ -27,12 +27,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleObserver
 import com.example.android.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
-
+ const val KEY_REVENUE = "key_revenue"
+const val KEY_DESSERTS_SOLD = "key_dessertsSold"
+const   val KEY_SECONDS_COUNT = "key_secondsCount"
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     private var revenue = 0
     private var dessertsSold = 0
     private lateinit var dessertTimer: DessertTimer
+
 
     // Contains all the views
     private lateinit var binding: ActivityMainBinding
@@ -83,6 +86,11 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         // seconds count. Also make sure to show the correct image resource.
 
         // Set the TextViews to the right values
+        if (savedInstanceState!=null){
+                 revenue=savedInstanceState.getInt(KEY_REVENUE)
+              dessertsSold=savedInstanceState.getInt(KEY_DESSERTS_SOLD)
+            dessertTimer.secondsCount=savedInstanceState.getInt(KEY_SECONDS_COUNT)
+        }
         binding.revenue = revenue
         binding.amountSold = dessertsSold
 
@@ -157,7 +165,16 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         return super.onOptionsItemSelected(item)
     }
 
-    // TODO (01) Add lifecycle callback methods for onSaveInstanceState and onRestoreInstanceState
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        outState?.putInt(KEY_REVENUE,revenue)
+
+        outState?.putInt(KEY_DESSERTS_SOLD,dessertsSold)
+
+        outState?.putInt(KEY_SECONDS_COUNT,dessertTimer.secondsCount)
+        Timber.i("onSaveInstanceState Called")
+    }
     // TODO (02) In onSaveInstanceState, put the revenue, dessertsSold and
     // dessertTimer.secondsCount in the state Bundle
 
